@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="ja">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="description" content="Mathematical Mind Reader 3 であなたの心を読みましょう。">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Fanctional Mind Reader</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <style>
+            @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+            h1{
+                font-family: Inter;
+            }
+            .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7); /* 半透明の黒 */
+            display: none; /* 初期状態では非表示 */
+            justify-content: center;
+            align-items: center;
+            z-index: 1000; /* 他の要素より手前に表示 */
+            overflow-y: auto; /* モーダル内容が長い場合にスクロール可能に */
+            padding: 20px;
+            box-sizing: border-box;
+            }
+        .modal-content {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 12px;
+            max-width: 90%;
+            max-height: 90%;
+            overflow-y: auto;
+            position: relative; /* 閉じるボタンの配置のため */
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            animation: fadeIn 0.3s ease-out; /* フェードインアニメーション */
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* モーダル内の画像をレスポンシブに表示 */
+            gap: 20px;
+            justify-items: center; /* グリッドアイテムを中央揃え */
+            align-items: start;
+        }
+        .modal-content .modal-image-container {
+            flex-shrink: 0; /* 縮小しない */
+            max-width: 250px; /* モーダル内の画像の最大幅 */
+            width: 100%; /* 親要素の幅に合わせる */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-content .modal-image-container img {
+            width: 100%;
+            height: auto;
+            object-fit: cover;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        </style>
+    </head>
+    <body><div class="container mx-auto p-4 bg-white shadow-lg rounded-xl max-w-7xl">
+        <header>
+            <h1 class="text-4xl text-center">
+                Functional Mind Reader
+            </h1>
+            <div class="flex justify-center items-center">
+                <div class="inline-block">
+                    <span class="block whitespace-nowrap text-left text-lg">方法</span>
+                    <span class="block whitespace-nowrap text-left text-lg">1.傾きも切片も一桁の整数な一次関数をイメージしてください。</span>
+                    <span class="block whitespace-nowrap text-left text-lg">2.その関数のxに8を代入してください。</span>
+                    <span class="block whitespace-nowrap text-left text-lg">3.その関数のxに3を代入してください。</span>
+                    <span class="block whitespace-nowrap text-left text-lg">4.(2)から(3)を引いてください。</span>
+                    <span class="block whitespace-nowrap text-left text-lg">5.その結果の番号の写真を覚えていてください。</span>
+                    <span class="block whitespace-nowrap text-left text-lg">6.「私の心を読んで」ボタンを押すと…？</span>
+                </div>
+            </div>
+        </header>
+        <main name="main" class="grid grid-cols-9 gap-4 mb-8">
+
+        </main>
+        <footer class="text-center">
+            <button id="readbtn" class="bg-green-400 hover:bg-green-600 text-red font-bold py-4 px-5 rounded-lg shadow-lg shadow-blue-300 transition duration-300 ease-in-out transform hover:scale-110">私の心を読んで</button>
+        </footer>
+        </div>
+        <div id="imageModal" class="modal-overlay">
+            <div class="modal-content">
+                <button id="closeModalBtn" class="absolute top-4 right-4 bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-full transition duration-300 ease-in-out transform hover:scale-105">
+                    閉じる
+                </button>
+            </div>
+        </div>
+        <script>
+            const array=["https://illustimage.com/photo/dl/26411.png?20231201",
+            "https://illustimage.com/photo/dl/26412.png?20231201",
+            "https://illustimage.com/photo/dl/26434.png?20231201",
+            "https://illustimage.com/photo/dl/26435.png?20231201",
+            "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgwt_djhQpg__P_S6sI6ZmfDrQTYN_K2fK1cTf03HTAANJ1xzb-86AOkbmyAylFvifIgtK-pBDqF2eOY87TSnNZdJAuZqGQnRnsidkILVJiDgsOoYEumn1U_4mdqTe7Dytv_ZtmEF497jtq/s800/job_suugakusya.png"
+            ];
+            function addimg(p){
+                let contentDiv = document.createElement("div");
+                contentDiv.className="flex flex-col items-center iustify-center";
+                const imgElement=document.createElement("img");
+                imgElement.setAttribute("id",p);
+                imgElement.setAttribute("name","img");
+                imgElement.className="w-full h-auto object-cover rounded-lg shadow-lg shadow-red-100 transition-transform duration-300 hover:scale-105";
+                const idElement=document.createElement("p");
+                idElement.textContent=p;
+                idElement.className="text-center text-xs text-gray-600 mt-1 truncate w-full px-1";
+                contentDiv.appendChild(imgElement);
+                contentDiv.appendChild(idElement);
+                const main = document.getElementsByName("main")[0];
+                main.appendChild(contentDiv);
+                return contentDiv;
+            }
+            const fiveImageIndex = Math.floor(Math.random()*array.length);
+            function start(){
+                for(let i = 4;i<58;i++){
+                    let f=addimg(i);
+                    let img=f.querySelector("img");
+                    if(i%5===0){
+                        img.setAttribute("src",array[fiveImageIndex]);
+                    }else{
+                        a=Math.floor(Math.random()*array.length);
+                        img.setAttribute("src",array[a]);
+                    }
+                }
+                setupEventListeners();
+            }
+            function setupEventListeners(){
+                const readmebtn = document.getElementById("readbtn")
+                const imageModal = document.getElementById("imageModal");
+                const closeModalBtn = document.getElementById("closeModalBtn");
+                const modalContent = imageModal.querySelector(".modal-content");
+                readmebtn.addEventListener("click",() => {
+                    while(modalContent.children.length>1){
+                        modalContent.removeChild(modalContent.lastChild);
+                        }
+                    fiveImage=document.createElement("img");
+                    fiveImage.setAttribute("src",array[fiveImageIndex]);
+                    fiveImage.classList.add('modal-image-container');
+                    modalContent.appendChild(fiveImage);
+                    imageModal.style.display="flex";
+                    }
+                )
+                closeModalBtn.addEventListener("click",() => {
+                    imageModal.style.display="none";
+                    location.reload();
+                    window.scrollTo(0, 0);
+                })
+            }
+            window.addEventListener("load",start())
+        </script>
+    </body>
+    
+</html>
